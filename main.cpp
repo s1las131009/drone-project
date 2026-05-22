@@ -1,18 +1,28 @@
 #include <Arduino.h>
 
-// put function declarations here:
-int myFunction(int, int);
+int potPin = A0;  // Potentiometer connected to analogue pin A0
+int ledPin = 3;   // LED connected to digital pin 3 (PWM capable)
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+    Serial.begin(9600);
+    pinMode(ledPin, OUTPUT);  // Tell the Arduino pin 3 is an output
+    Serial.println("=== Brightness Controller Started ===");
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
+    int rawValue = analogRead(potPin);                    // Read pot: 0–1023
+    int brightness = map(rawValue, 0, 1023, 0, 255);     // Convert to PWM range
+    int percentage = map(rawValue, 0, 1023, 0, 100);     // Convert to percentage
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+    analogWrite(ledPin, brightness);  // Set the LED brightness
+
+    Serial.print("Raw: ");
+    Serial.print(rawValue);
+    Serial.print("  |  PWM: ");
+    Serial.print(brightness);
+    Serial.print("  |  Power: ");
+    Serial.print(percentage);
+    Serial.println("%");
+
+    delay(100);
 }
